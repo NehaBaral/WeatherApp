@@ -13,10 +13,12 @@ class ViewController: UIViewController {
     @IBOutlet var searchIcon: UIImageView!
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var locationItem: UIBarButtonItem!
-    
+
     @IBOutlet weak var city: UILabel!
     @IBOutlet weak var weatherCondition: UILabel!
+
     var weatherData = WeatherDataService()
+
     private let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
@@ -26,7 +28,8 @@ class ViewController: UIViewController {
         weatherData.delegate = self
     
         self.navigationItem.titleView = searchBar
-        
+        self.navigationItem.leftBarButtonItem = locationItem
+
         //Remove the searchIcon from the left position of search bar
         searchBar.setImage(UIImage(), for: .search, state: .normal)
         
@@ -36,11 +39,7 @@ class ViewController: UIViewController {
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchIcon)
         
-        
         locationManager.delegate = self
-        
-        self.navigationItem.leftBarButtonItem = locationItem
-
     }
     
     @IBAction func locationButton(_ sender: UIBarButtonItem) {
@@ -53,16 +52,14 @@ class ViewController: UIViewController {
     }
 
     @objc func weatherDetails(location: String) {
-       
         weatherData.getWeatherApi(coordinates:location)
-        
     }
 
 }
 
 extension ViewController : weatherManagerDelegate {
     func didFailWithError(info: any Error) {
-        print(info)
+        print("Error: \(info)")
 
     }
     
