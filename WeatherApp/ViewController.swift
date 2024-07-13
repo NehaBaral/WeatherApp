@@ -7,23 +7,23 @@
 
 import UIKit
 import CoreLocation
-import CoreLocationUI
+import SwiftUI
 class ViewController: UIViewController {
-
-    @IBOutlet var locationIcon: UIImageView!
     
     @IBOutlet var searchIcon: UIImageView!
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var locationItem: UIBarButtonItem!
     
+    @IBOutlet weak var city: UILabel!
+    @IBOutlet weak var weatherCondition: UILabel!
+    var weatherData = WeatherDataService()
     private let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         searchBar.delegate = self
-//        let leftNavBarButton = UIBarButtonItem(customView:locationIcon)
-//        self.navigationItem.leftBarButtonItem = leftNavBarButton
+        weatherData.delegate = self
     
         self.navigationItem.titleView = searchBar
         
@@ -38,6 +38,7 @@ class ViewController: UIViewController {
         
         
         locationManager.delegate = self
+        
         self.navigationItem.leftBarButtonItem = locationItem
 
     }
@@ -48,9 +49,30 @@ class ViewController: UIViewController {
     }
     
     private func displayLocation(locationText: String) {
-        print(locationText)
+        weatherDetails(location: locationText)
     }
 
+    @objc func weatherDetails(location: String) {
+       
+        weatherData.getWeatherApi(coordinates:location)
+        
+    }
+
+}
+
+extension ViewController : weatherManagerDelegate {
+    func didFailWithError(info: any Error) {
+        print(info)
+
+    }
+    
+    func didUpdaterWeatherInformation(info: weatherDataObject) {
+        DispatchQueue.main.async {
+            print(info)
+            self.weatherCondition.text = info.current.condition.text
+            self.city.text = info.location.name
+        }
+    }
 }
 
 
@@ -59,7 +81,8 @@ extension ViewController : CLLocationManagerDelegate {
         if let location = locations.last {
             let latitude = location.coordinate.latitude
             let longitude = location.coordinate.longitude
-            displayLocation(locationText: "Data \(latitude), \(longitude)")
+            displayLocation(locationText: "\(latitude),\(longitude)")
+
         }
     }
     

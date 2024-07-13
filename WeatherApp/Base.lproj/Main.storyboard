@@ -95,10 +95,11 @@
                     </view>
                     <navigationItem key="navigationItem" style="browser" id="6eB-qz-QDk"/>
                     <connections>
-                        <outlet property="locationIcon" destination="6kt-YO-l11" id="fpk-3h-e5J"/>
+                        <outlet property="city" destination="gYV-0v-pGK" id="Ldv-QQ-Uem"/>
                         <outlet property="locationItem" destination="cct-FW-5Ic" id="kuA-6c-6SZ"/>
                         <outlet property="searchBar" destination="yTG-5u-LuT" id="Obq-Me-1V4"/>
                         <outlet property="searchIcon" destination="IiV-vj-fv9" id="Vs6-Ko-FXN"/>
+                        <outlet property="weatherCondition" destination="qPZ-vs-rvD" id="Hrj-AI-vji"/>
                         <segue destination="UOY-aD-3Sg" kind="show" id="0dd-ug-Pny"/>
                     </connections>
                 </viewController>
@@ -115,10 +116,6 @@
                         <outlet property="delegate" destination="BYZ-38-t0r" id="v9V-2k-uCE"/>
                     </connections>
                 </searchBar>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="location.circle.fill" catalog="system" id="6kt-YO-l11">
-                    <rect key="frame" x="0.0" y="0.0" width="20" height="18.666666666666664"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                </imageView>
                 <barButtonItem title="Item" id="cct-FW-5Ic">
                     <imageReference key="image" image="location.circle" catalog="system" symbolScale="large"/>
                     <connections>
@@ -171,7 +168,6 @@
         <image name="backgroundImg" width="1920" height="391"/>
         <image name="cloud.sun.fill" catalog="system" width="128" height="101"/>
         <image name="location.circle" catalog="system" width="128" height="123"/>
-        <image name="location.circle.fill" catalog="system" width="128" height="123"/>
         <image name="magnifyingglass" catalog="system" width="128" height="117"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
