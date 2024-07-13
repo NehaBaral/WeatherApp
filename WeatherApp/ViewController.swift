@@ -6,22 +6,30 @@
 //
 
 import UIKit
-
+import CoreLocation
+import SwiftUI
 class ViewController: UIViewController {
-
-    @IBOutlet var locationIcon: UIImageView!
     
     @IBOutlet var searchIcon: UIImageView!
     @IBOutlet var searchBar: UISearchBar!
+    @IBOutlet var locationItem: UIBarButtonItem!
+
+    @IBOutlet weak var city: UILabel!
+    @IBOutlet weak var weatherCondition: UILabel!
+
+    var weatherData = WeatherDataService()
+
+    private let locationManager = CLLocationManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         searchBar.delegate = self
-        let leftNavBarButton = UIBarButtonItem(customView:locationIcon)
-        self.navigationItem.leftBarButtonItem = leftNavBarButton
-        
+        weatherData.delegate = self
+    
         self.navigationItem.titleView = searchBar
-        
+        self.navigationItem.leftBarButtonItem = locationItem
+
         //Remove the searchIcon from the left position of search bar
         searchBar.setImage(UIImage(), for: .search, state: .normal)
         
@@ -31,9 +39,53 @@ class ViewController: UIViewController {
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchIcon)
         
+        locationManager.delegate = self
+    }
+    
+    @IBAction func locationButton(_ sender: UIBarButtonItem) {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
+    }
+    
+    private func displayLocation(locationText: String) {
+        weatherDetails(location: locationText)
     }
 
+    @objc func weatherDetails(location: String) {
+        weatherData.getWeatherApi(coordinates:location)
+    }
 
+}
+
+extension ViewController : weatherManagerDelegate {
+    func didFailWithError(info: any Error) {
+        print("Error: \(info)")
+
+    }
+    
+    func didUpdaterWeatherInformation(info: weatherDataObject) {
+        DispatchQueue.main.async {
+            print(info)
+            self.weatherCondition.text = info.current.condition.text
+            self.city.text = info.location.name
+        }
+    }
+}
+
+
+extension ViewController : CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            let latitude = location.coordinate.latitude
+            let longitude = location.coordinate.longitude
+            displayLocation(locationText: "\(latitude),\(longitude)")
+
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
+        print(error)
+    }
 }
 
 extension ViewController : UISearchBarDelegate{
