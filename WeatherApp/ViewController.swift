@@ -14,6 +14,10 @@ class ViewController: UIViewController {
     @IBOutlet var switchButton: UISegmentedControl!
     @IBOutlet weak var loading: UIActivityIndicatorView!
 
+    @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var tableView: UITableView!
+    
+    var cityList: [City] = []
     var weatherData = WeatherDataService()
     private let locationManager = CLLocationManager()
     var searchedCitiesWeather: [weatherDataObject] = []
@@ -29,6 +33,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         searchBar.delegate = self
         weatherData.delegate = self
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.isHidden = true
     
         // Navigation Item
         self.navigationItem.titleView = searchBar
@@ -58,7 +65,7 @@ class ViewController: UIViewController {
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
     }
-    
+
     //Updating out own location in weatherapp
     @IBAction func locationButton(_ sender: UIBarButtonItem) {
         locationManager.requestWhenInUseAuthorization()
@@ -72,7 +79,7 @@ class ViewController: UIViewController {
     func weatherDetails(location: String) {
         weatherData.getWeatherApi(coordinates: location)
     }
-
+    
     func addCityWeather(_ weather: weatherDataObject) {
         if let existingIndex = searchedCitiesWeather.firstIndex(where: { $0.location.lat == weather.location.lat && $0.location.lon == weather.location.lon }) {
               searchedCitiesWeather[existingIndex] = weather
@@ -148,7 +155,9 @@ extension ViewController: WeatherManagerDelegate {
         showAlert()
     }
     
-    
+    func didRecieveCities(info: [City]) {
+        cityList = info
+    }
     
     func didUpdateWeatherInformation(info: weatherDataObject) {
         DispatchQueue.main.async {
@@ -226,14 +235,64 @@ extension ViewController: CLLocationManagerDelegate {
 
 extension ViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+       print("when")
         if let searchText = searchBar.text, !searchText.isEmpty {
             weatherDetails(location: searchText)
         }
         searchBar.resignFirstResponder()
     }
     
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        tableView.isHidden = false
+            
+        
+        }
+    
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        tableView.isHidden = false
+        weatherData.getWeatherFromCity(city: searchText)
+        
+        if searchText.isEmpty {
+                    print("Clear button (X button) was tapped in the search bar.")
+            self.tableView.isHidden = true
+        }
+        
         // have to work on search
         //i think we need to show recommendation when we add text on search bar
+        self.tableView.reloadData()
     }
+    
+    
+}
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("wen are u coming e")
+        return cityList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "searchcell", for: indexPath)
+        if indexPath.row < cityList.count {
+                let cityName = cityList[indexPath.row]
+                cell.textLabel?.text = "\(cityName.name), \(cityName.region), \(cityName.country)"
+        } else {
+            print("Index out of bounds: \(indexPath.row)")
+        }
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row < cityList.count {
+            weatherData.getWeatherApi(coordinates: " \(cityList[indexPath.row].lat), \(cityList[indexPath.row].lon)")
+           
+        }
+            cityList.removeAll()
+            self.tableView.reloadData()
+            self.tableView.isHidden = true
+            searchBar.text = ""
+            searchBar.resignFirstResponder()
+        }
 }
