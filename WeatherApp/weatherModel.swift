@@ -32,8 +32,10 @@ struct Current: Decodable {
 //    let precipMm: Double
 //    let pressureIn: String
 //    let pressureMb: Int
-//    let tempC: Double
-//    let tempF: Double
+    let temp_c: Double
+    let temp_f: Double
+    
+    
 //    let uv: Int
 //    let visKm: Int
 //    let visMiles: Int
