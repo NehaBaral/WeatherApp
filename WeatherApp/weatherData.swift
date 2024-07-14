@@ -1,6 +1,7 @@
 import Foundation
 
-protocol WeatherManagerDelegate: AnyObject {
+protocol WeatherManagerDelegate {
+    func startLoading()
     func didUpdateWeatherInformation(info: weatherDataObject)
     func didFailWithError(error: Error)
 }
@@ -8,10 +9,13 @@ protocol WeatherManagerDelegate: AnyObject {
 let APIKey = "abbac59e4cf84b918c3142625241207"
 
 struct WeatherDataService {
-    weak var delegate: (any WeatherManagerDelegate)?
+    var delegate : WeatherManagerDelegate?
+    
     let baseURL = "http://api.weatherapi.com/v1/current.json?key=\(APIKey)&q="
     
+    
     func getWeatherApi(coordinates: String) {
+        delegate?.startLoading()
         guard let url = URL(string: "\(baseURL)\(coordinates)") else {
             let error = NSError(domain: "Invalid URL", code: 400, userInfo: nil)
             delegate?.didFailWithError(error: error)
