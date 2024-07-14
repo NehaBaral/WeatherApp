@@ -1,42 +1,40 @@
 import UIKit
 
-class SecondScreenViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class SecondScreenViewController: UIViewController {
     
     var citiesWeather: [weatherDataObject] = [] 
     var isCelsius: Bool = true
     
-    let tableView = UITableView()
     
+    @IBOutlet weak var emptyData: UILabel!
+    
+    @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        
+       // view.backgroundColor = .white
+        emptyData.isHidden = citiesWeather.isEmpty == false
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        
-        view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
     }
     
+    
+}
+
+extension SecondScreenViewController : UITableViewDataSource{
+    //Indicate number of items in the list
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return citiesWeather.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ListTableViewCellIdentifier", for: indexPath) as? SecondScreenTableViewCell
+        
         let weatherData = citiesWeather[indexPath.row]
-        
-        let temperature = isCelsius ? weatherData.current.temp_c : weatherData.current.temp_f 
+        let temperature = isCelsius ? weatherData.current.temp_c : weatherData.current.temp_f
         let unit = isCelsius ? "C" : "F"
+        cell?.titleView.text = "\(weatherData.location.name) - \(temperature)°\(unit)"
         
-        cell.textLabel?.text = "\(weatherData.location.name) - \(temperature)°\(unit)"
+        cell?.descView.text = "\(weatherData.current.condition.text)"
         
         var iconURLString = weatherData.current.condition.icon
         if !iconURLString.hasPrefix("http://") && !iconURLString.hasPrefix("https://") {
@@ -49,13 +47,19 @@ class SecondScreenViewController: UIViewController, UITableViewDataSource, UITab
                 if let imageData = try? Data(contentsOf: imageURL) {
                     DispatchQueue.main.async {
                         let image = UIImage(data: imageData)
-                        cell.imageView?.image = image
-                        cell.setNeedsLayout()
+                        cell?.weatherConditionImg?.image = image
+                      //  cell.setNeedsLayout()
                     }
                 }
             }
         }
         
-        return cell
+        return cell ?? UITableViewCell()
+    }
+}
+
+extension SecondScreenViewController : UITableViewDelegate{
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
     }
 }

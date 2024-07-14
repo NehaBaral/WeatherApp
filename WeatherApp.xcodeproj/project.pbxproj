@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		911B21292C4410B0000405B6 /* SecondScreenTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911B21282C4410B0000405B6 /* SecondScreenTableViewCell.swift */; };
 		91B3966A2C3F3EB800F409E8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B396692C3F3EB800F409E8 /* AppDelegate.swift */; };
 		91B3966C2C3F3EB800F409E8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B3966B2C3F3EB800F409E8 /* SceneDelegate.swift */; };
 		91B3966E2C3F3EB800F409E8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B3966D2C3F3EB800F409E8 /* ViewController.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		911B21282C4410B0000405B6 /* SecondScreenTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondScreenTableViewCell.swift; sourceTree = "<group>"; };
 		91B396662C3F3EB800F409E8 /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		91B396692C3F3EB800F409E8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		91B3966B2C3F3EB800F409E8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				91EC44612C4066980002B667 /* SecondScreenViewController.swift */,
 				C060C8E12C41789800F7155E /* weatherData.swift */,
 				C060C8E32C41A9EF00F7155E /* weatherModel.swift */,
+				911B21282C4410B0000405B6 /* SecondScreenTableViewCell.swift */,
 			);
 			path = WeatherApp;
 			sourceTree = "<group>";
@@ -147,6 +150,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				911B21292C4410B0000405B6 /* SecondScreenTableViewCell.swift in Sources */,
 				91EC44632C4066980002B667 /* SecondScreenViewController.swift in Sources */,
 				C060C8E22C41789800F7155E /* weatherData.swift in Sources */,
 				91B3966E2C3F3EB800F409E8 /* ViewController.swift in Sources */,
