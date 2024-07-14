@@ -12,16 +12,18 @@ class ViewController: UIViewController {
     @IBOutlet weak var weatherCondition: UILabel!
     @IBOutlet weak var temperature: UILabel!
     @IBOutlet var switchButton: UISegmentedControl!
-    
-    @IBAction func cityButtonClicked(_ sender: Any) {
-        performSegue(withIdentifier: "weatherListScreen", sender: self)
-        
-    }
+    @IBOutlet weak var loading: UIActivityIndicatorView!
+
     var weatherData = WeatherDataService()
     private let locationManager = CLLocationManager()
     var searchedCitiesWeather: [weatherDataObject] = []
     var isCelsius: Bool = true
     var currentWeatherInfo: weatherDataObject?
+    
+    @IBAction func cityButtonClicked(_ sender: Any) {
+        performSegue(withIdentifier: "weatherListScreen", sender: self)
+        
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +37,7 @@ class ViewController: UIViewController {
         searchBar.setImage(UIImage(), for: .search, state: .normal)
         
         
-        searchBar.searchTextField.textAlignment = .right
+       // searchBar.searchTextField.textAlignment = .right
         searchBar.searchTextField.placeholder = "Search Location"
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchIcon)
@@ -44,6 +46,11 @@ class ViewController: UIViewController {
         
         // Set up segmented control action
         switchButton.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
+        // selected option color
+        switchButton.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+
+        // color of other options
+        switchButton.setTitleTextAttributes([.foregroundColor: UIColor.blue], for: .normal)
         
         // Add tap gesture recognizer to the search icon
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(searchIconTapped))
@@ -109,15 +116,33 @@ class ViewController: UIViewController {
         }
         searchBar.resignFirstResponder()
     }
+    
+    private func showAlert(){
+        let alert = UIAlertController(title: "Weather Fetching Error", message: "Try Again", preferredStyle: .alert)
+        let okButton = UIAlertAction(title: "Ok", style: .default){[self] _ in
+          //  loginBtn.isEnabled = false
+        }
+        alert.addAction(okButton)
+        present(alert,animated: true ,completion: nil)
+    }
 }
 
+
 extension ViewController: WeatherManagerDelegate {
-    func didFailWithError(error: Error) {
-        print("Error: \(error)")
+    func startLoading() {
+        loading.startAnimating()
     }
+    
+    func didFailWithError(error: any Error) {
+        loading.stopAnimating()
+        showAlert()
+    }
+    
+    
     
     func didUpdateWeatherInformation(info: weatherDataObject) {
         DispatchQueue.main.async {
+            self.loading.stopAnimating()
             self.currentWeatherInfo = info
             self.weatherCondition.text = info.current.condition.text
             self.city.text = info.location.name

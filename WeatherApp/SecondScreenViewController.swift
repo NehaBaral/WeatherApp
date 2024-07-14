@@ -5,13 +5,11 @@ class SecondScreenViewController: UIViewController {
     var citiesWeather: [weatherDataObject] = [] 
     var isCelsius: Bool = true
     
-    
     @IBOutlet weak var emptyData: UILabel!
     
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-       // view.backgroundColor = .white
         emptyData.isHidden = citiesWeather.isEmpty == false
         tableView.dataSource = self
         tableView.delegate = self
@@ -48,7 +46,6 @@ extension SecondScreenViewController : UITableViewDataSource{
                     DispatchQueue.main.async {
                         let image = UIImage(data: imageData)
                         cell?.weatherConditionImg?.image = image
-                      //  cell.setNeedsLayout()
                     }
                 }
             }
