@@ -37,7 +37,7 @@
                                 <color key="textColor" systemColor="systemBlueColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud.sun.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ED5-Jw-d0w">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud.sun.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ED5-Jw-d0w">
                                 <rect key="frame" x="116.99999999999999" y="183" width="180.66666666666669" height="149.66666666666663"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="180" id="pKg-YI-KK2"/>
@@ -45,17 +45,14 @@
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="200.0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L8x-pL-pKN">
-                                <rect key="frame" x="117" y="336.66666666666669" width="92" height="31.333333333333314"/>
+                                <rect key="frame" x="122" y="336.66666666666669" width="68.666666666666686" height="31.333333333333314"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                 <color key="textColor" systemColor="systemBlueColor"/>
                                 <nil key="highlightedColor"/>
                                 <lineBreakStrategy key="lineBreakStrategy"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="N3R-Uy-t1c">
-                                <rect key="frame" x="217" y="336.66666666666669" width="80" height="32.333333333333314"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="80" id="Rqj-tt-zhR"/>
-                                </constraints>
+                                <rect key="frame" x="198.66666666666666" y="336.66666666666669" width="98.333333333333343" height="32.333333333333314"/>
                                 <segments>
                                     <segment title="C"/>
                                     <segment title="F"/>
@@ -95,7 +92,7 @@
                             <constraint firstItem="s8v-qT-A72" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="UoT-Hf-gwV"/>
                             <constraint firstItem="cho-oX-0an" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="W5f-kg-HKn"/>
                             <constraint firstItem="gYV-0v-pGK" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="dCI-8r-nV1"/>
-                            <constraint firstItem="L8x-pL-pKN" firstAttribute="leading" secondItem="ED5-Jw-d0w" secondAttribute="leading" id="eTb-di-cmA"/>
+                            <constraint firstItem="L8x-pL-pKN" firstAttribute="leading" secondItem="ED5-Jw-d0w" secondAttribute="leading" constant="5" id="eTb-di-cmA"/>
                             <constraint firstItem="ED5-Jw-d0w" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="eXS-jg-5sC"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Lup-GV-Xqe" secondAttribute="bottom" id="gIv-oy-a3t"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="qPZ-vs-rvD" secondAttribute="trailing" constant="16" id="hEX-7V-aKS"/>
@@ -142,7 +139,7 @@
                         <action selector="locationButton:" destination="BYZ-38-t0r" id="IAX-4r-Dcm"/>
                     </connections>
                 </barButtonItem>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="magnifyingglass" catalog="system" id="IiV-vj-fv9">
+                <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="magnifyingglass" catalog="system" id="IiV-vj-fv9">
                     <rect key="frame" x="0.0" y="0.0" width="20" height="18.666666666666664"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
