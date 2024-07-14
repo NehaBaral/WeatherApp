@@ -12,38 +12,42 @@ class ViewController: UIViewController {
     @IBOutlet weak var weatherCondition: UILabel!
     @IBOutlet weak var temperature: UILabel!
     @IBOutlet var switchButton: UISegmentedControl!
-    
-    @IBAction func cityButtonClicked(_ sender: Any) {
-        performSegue(withIdentifier: "weatherListScreen", sender: self)
-        
-    }
+    @IBOutlet weak var loading: UIActivityIndicatorView!
+
     var weatherData = WeatherDataService()
     private let locationManager = CLLocationManager()
     var searchedCitiesWeather: [weatherDataObject] = []
     var isCelsius: Bool = true
     var currentWeatherInfo: weatherDataObject?
+    
+    @IBAction func cityButtonClicked(_ sender: Any) {
+        performSegue(withIdentifier: "weatherListScreen", sender: self)
+        
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
         weatherData.delegate = self
     
+        // Navigation Item
         self.navigationItem.titleView = searchBar
         self.navigationItem.leftBarButtonItem = locationItem
-
-      
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchIcon)
         searchBar.setImage(UIImage(), for: .search, state: .normal)
         
-        
-        searchBar.searchTextField.textAlignment = .right
+       // searchBar.searchTextField.textAlignment = .right
         searchBar.searchTextField.placeholder = "Search Location"
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchIcon)
         
         locationManager.delegate = self
         
         // Set up segmented control action
         switchButton.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
+        // selected option color
+        switchButton.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+
+        // color of other options
+        switchButton.setTitleTextAttributes([.foregroundColor: UIColor.blue], for: .normal)
         
         // Add tap gesture recognizer to the search icon
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(searchIconTapped))
@@ -55,6 +59,7 @@ class ViewController: UIViewController {
         locationManager.requestLocation()
     }
     
+    //Updating out own location in weatherapp
     @IBAction func locationButton(_ sender: UIBarButtonItem) {
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
@@ -64,18 +69,28 @@ class ViewController: UIViewController {
         weatherDetails(location: locationText)
     }
 
-    @objc func weatherDetails(location: String) {
+    func weatherDetails(location: String) {
         weatherData.getWeatherApi(coordinates: location)
     }
 
     func addCityWeather(_ weather: weatherDataObject) {
         if let existingIndex = searchedCitiesWeather.firstIndex(where: { $0.location.lat == weather.location.lat && $0.location.lon == weather.location.lon }) {
-             
               searchedCitiesWeather[existingIndex] = weather
           } else {
            
               searchedCitiesWeather.append(weather)
           }
+    }
+    
+    //start updating location
+    func startUpdatingLocation(){
+        locationManager.startUpdatingLocation()
+        
+    }
+    
+    //stop updating location
+    func stopUpdatingLocation(){
+        locationManager.stopUpdatingLocation()
     }
  
 
@@ -103,21 +118,41 @@ class ViewController: UIViewController {
         }
     }
     
+    
     @objc func searchIconTapped() {
         if let searchText = searchBar.text, !searchText.isEmpty {
             weatherDetails(location: searchText)
         }
         searchBar.resignFirstResponder()
     }
+    
+    //function to show alert
+    private func showAlert(){
+        let alert = UIAlertController(title: "Weather Fetching Error", message: "Try Again", preferredStyle: .alert)
+        let okButton = UIAlertAction(title: "Ok", style: .default){[self] _ in
+          //  loginBtn.isEnabled = false
+        }
+        alert.addAction(okButton)
+        present(alert,animated: true ,completion: nil)
+    }
 }
 
+// Delegate to manage api call for the location
 extension ViewController: WeatherManagerDelegate {
-    func didFailWithError(error: Error) {
-        print("Error: \(error)")
+    func startLoading() {
+        loading.startAnimating()
     }
+    
+    func didFailWithError(error: any Error) {
+        loading.stopAnimating()
+        showAlert()
+    }
+    
+    
     
     func didUpdateWeatherInformation(info: weatherDataObject) {
         DispatchQueue.main.async {
+            self.loading.stopAnimating()
             self.currentWeatherInfo = info
             self.weatherCondition.text = info.current.condition.text
             self.city.text = info.location.name
@@ -150,16 +185,42 @@ extension ViewController: WeatherManagerDelegate {
 }
 
 extension ViewController: CLLocationManagerDelegate {
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus{
+            
+        case .notDetermined:
+            showAlert()
+        case .restricted:
+            showAlert()
+        case .denied:
+            showAlert()
+        case .authorizedAlways:
+            manager.requestAlwaysAuthorization()
+            loading.startAnimating()
+            startUpdatingLocation()
+        case .authorizedWhenInUse:
+            manager.requestWhenInUseAuthorization()
+            loading.startAnimating()
+            startUpdatingLocation()
+        @unknown default:
+            showAlert()
+        }
+    }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             let latitude = location.coordinate.latitude
             let longitude = location.coordinate.longitude
             displayLocation(locationText: "\(latitude),\(longitude)")
+        }else{
+            return
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(error)
+        loading.stopAnimating()
+        stopUpdatingLocation()
     }
 }
 
@@ -169,5 +230,10 @@ extension ViewController: UISearchBarDelegate {
             weatherDetails(location: searchText)
         }
         searchBar.resignFirstResponder()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // have to work on search
+        //i think we need to show recommendation when we add text on search bar
     }
 }
