@@ -8,12 +8,18 @@ class ViewController: UIViewController {
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var locationItem: UIBarButtonItem!
     @IBOutlet weak var city: UILabel!
+    @IBOutlet weak var cityButton: UIButton!
     @IBOutlet weak var weatherCondition: UILabel!
     @IBOutlet weak var temperature: UILabel!
     @IBOutlet var switchButton: UISegmentedControl!
+    
+    @IBAction func cityButtonClicked(_ sender: Any) {
+        performSegue(withIdentifier: "weatherListScreen", sender: self)
+        
+    }
     var weatherData = WeatherDataService()
     private let locationManager = CLLocationManager()
-    var citiesWeather: [weatherDataObject] = []
+    var searchedCitiesWeather: [weatherDataObject] = []
     var isCelsius: Bool = true
     var currentWeatherInfo: weatherDataObject?
 
@@ -25,10 +31,10 @@ class ViewController: UIViewController {
         self.navigationItem.titleView = searchBar
         self.navigationItem.leftBarButtonItem = locationItem
 
-        // Remove the searchIcon from the left position of the search bar
+      
         searchBar.setImage(UIImage(), for: .search, state: .normal)
         
-        // Align text from right to left
+        
         searchBar.searchTextField.textAlignment = .right
         searchBar.searchTextField.placeholder = "Search Location"
         
@@ -63,15 +69,28 @@ class ViewController: UIViewController {
     }
 
     func addCityWeather(_ weather: weatherDataObject) {
-        citiesWeather.append(weather)
+        if let existingIndex = searchedCitiesWeather.firstIndex(where: { $0.location.lat == weather.location.lat && $0.location.lon == weather.location.lon }) {
+             
+              searchedCitiesWeather[existingIndex] = weather
+          } else {
+           
+              searchedCitiesWeather.append(weather)
+          }
     }
-    
-    @IBAction func showCities(_ sender: UIBarButtonItem) {
-        let citiesVC = SecondScreenViewController()
-        citiesVC.citiesWeather = citiesWeather
-        citiesVC.isCelsius = isCelsius
-        navigationController?.pushViewController(citiesVC, animated: true)
+ 
+
+    // Prepare for segue to pass data
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "weatherListScreen" {
+            if let citiesVC = segue.destination as? SecondScreenViewController {
+                citiesVC.citiesWeather = searchedCitiesWeather
+                citiesVC.isCelsius = isCelsius
+            }
+        }
     }
+
+
+
     
     @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         isCelsius = sender.selectedSegmentIndex == 0
@@ -104,7 +123,7 @@ extension ViewController: WeatherManagerDelegate {
             self.city.text = info.location.name
             self.addCityWeather(info)
             self.updateTemperatureLabel()
-            
+          
             var iconURLString = info.current.condition.icon
             if !iconURLString.hasPrefix("http://") && !iconURLString.hasPrefix("https://") {
                 iconURLString = "https:" + iconURLString

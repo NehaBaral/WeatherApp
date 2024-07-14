@@ -1,21 +1,12 @@
-//
-//  SecondScreenViewController.swift
-//  WeatherApp
-//
-//  Created by Neha on 2024-07-11.
-//
-
-
-
 import UIKit
 
 class SecondScreenViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    var citiesWeather: [weatherDataObject] = []
+    var citiesWeather: [weatherDataObject] = [] 
     var isCelsius: Bool = true
     
     let tableView = UITableView()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -42,11 +33,28 @@ class SecondScreenViewController: UIViewController, UITableViewDataSource, UITab
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let weatherData = citiesWeather[indexPath.row]
         
-        let temperature = isCelsius ? weatherData.current.temp_c: weatherData.current.temp_f * 9 / 5 + 32
+        let temperature = isCelsius ? weatherData.current.temp_c : weatherData.current.temp_f 
         let unit = isCelsius ? "C" : "F"
         
         cell.textLabel?.text = "\(weatherData.location.name) - \(temperature)°\(unit)"
-        cell.imageView?.image = UIImage(named: weatherData.current.condition.icon)
+        
+        var iconURLString = weatherData.current.condition.icon
+        if !iconURLString.hasPrefix("http://") && !iconURLString.hasPrefix("https://") {
+            iconURLString = "https:" + iconURLString
+        }
+        
+        // Load image asynchronously
+        if let imageURL = URL(string: iconURLString) {
+            DispatchQueue.global().async {
+                if let imageData = try? Data(contentsOf: imageURL) {
+                    DispatchQueue.main.async {
+                        let image = UIImage(data: imageData)
+                        cell.imageView?.image = image
+                        cell.setNeedsLayout()
+                    }
+                }
+            }
+        }
         
         return cell
     }
