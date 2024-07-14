@@ -25,6 +25,9 @@
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Cities"/>
+                                <connections>
+                                    <action selector="cityButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mX7-B9-eCg"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Partly cloudy" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qPZ-vs-rvD">
                                 <rect key="frame" x="317.66666666666669" y="107" width="94.333333333333314" height="35"/>
@@ -96,11 +99,15 @@
                     <navigationItem key="navigationItem" style="browser" id="6eB-qz-QDk"/>
                     <connections>
                         <outlet property="city" destination="gYV-0v-pGK" id="Ldv-QQ-Uem"/>
+                        <outlet property="cityButton" destination="cho-oX-0an" id="M9A-KG-3CE"/>
                         <outlet property="locationItem" destination="cct-FW-5Ic" id="kuA-6c-6SZ"/>
                         <outlet property="searchBar" destination="yTG-5u-LuT" id="Obq-Me-1V4"/>
                         <outlet property="searchIcon" destination="IiV-vj-fv9" id="Vs6-Ko-FXN"/>
+                        <outlet property="switchButton" destination="N3R-Uy-t1c" id="G4Q-mx-eZ0"/>
+                        <outlet property="temperature" destination="L8x-pL-pKN" id="zdE-PR-7MJ"/>
                         <outlet property="weatherCondition" destination="qPZ-vs-rvD" id="Hrj-AI-vji"/>
-                        <segue destination="UOY-aD-3Sg" kind="show" id="0dd-ug-Pny"/>
+                        <outlet property="weatherImage" destination="ED5-Jw-d0w" id="NhI-N2-bTq"/>
+                        <segue destination="UOY-aD-3Sg" kind="show" identifier="weatherListScreen" id="0dd-ug-Pny"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -123,7 +130,7 @@
                     </connections>
                 </barButtonItem>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="magnifyingglass" catalog="system" id="IiV-vj-fv9">
-                    <rect key="frame" x="0.0" y="0.0" width="20" height="18.666666666666664"/>
+                    <rect key="frame" x="0.0" y="-0.3333333333333286" width="20" height="18.666666666666664"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
             </objects>
@@ -132,10 +139,47 @@
         <!--Second Screen View Controller-->
         <scene sceneID="2pG-vX-YbU">
             <objects>
-                <viewController id="UOY-aD-3Sg" customClass="SecondScreenViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="UOY-aD-3Sg" customClass="SecondScreenViewController" customModule="WeatherApp" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ONc-aM-zxb">
                         <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="kqN-mq-kAm">
+                                <rect key="frame" x="60" y="108" width="304" height="627"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" editingAccessoryType="disclosureIndicator" focusStyle="custom" rowHeight="102" id="ZVd-av-fNA">
+                                        <rect key="frame" x="0.0" y="50" width="304" height="102"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZVd-av-fNA" id="ddZ-fA-Rra">
+                                            <rect key="frame" x="0.0" y="0.0" width="277.66666666666669" height="102"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nT8-ku-1Zh">
+                                                    <rect key="frame" x="16" y="11" width="85" height="80"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="53q-NU-r9q">
+                                                    <rect key="frame" x="121" y="15" width="95" height="32"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w5C-zl-0QT">
+                                                    <rect key="frame" x="121" y="55" width="105" height="25"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="vP7-yJ-E81"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
@@ -143,7 +187,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="auj-7o-epY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1843.5114503816794" y="3.5211267605633805"/>
+            <point key="canvasLocation" x="1843.4579439252336" y="3.2397408207343417"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ubs-0u-TNA">
