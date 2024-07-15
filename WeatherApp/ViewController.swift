@@ -21,7 +21,7 @@ class ViewController: UIViewController {
     
     private let locationManager = CLLocationManager()
     var cityList: [City] = []
-    var weatherData = WeatherDataService()
+    var weatherService = WeatherServiceWorker()
     var searchedCitiesWeather: [weatherDataObject] = []
     var isCelsius: Bool = true
     var currentWeatherInfo: weatherDataObject?
@@ -33,7 +33,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
-        weatherData.delegate = self
+        weatherService.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
         tableView.isHidden = true
@@ -85,7 +85,7 @@ class ViewController: UIViewController {
     
 
     func weatherDetails(location: String) {
-        weatherData.getWeatherApi(coordinates: location)
+        weatherService.getWeatherFromCoordinates(coordinates: location)
     }
     
     func addCityWeather(_ weather: weatherDataObject) {
@@ -155,7 +155,7 @@ extension ViewController: WeatherManagerDelegate {
     }
     
     func didRecieveCities(info: [City]) {
-        cityList = info
+        self.cityList = info
     }
     
     func didUpdateWeatherInformation(info: weatherDataObject) {
@@ -248,7 +248,7 @@ extension ViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         tableView.isHidden = false
-        weatherData.getWeatherFromCity(city: searchText)
+        weatherService.getWeatherFromLocationSearch(city: searchText)
         
         if searchText.isEmpty {
             print("Clear button (X button) was tapped in the search bar.")
@@ -256,8 +256,6 @@ extension ViewController: UISearchBarDelegate {
         }
         self.tableView.reloadData()
     }
-    
-    
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
@@ -281,14 +279,15 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if indexPath.row < cityList.count {
-            weatherData.getWeatherApi(coordinates: " \(cityList[indexPath.row].lat), \(cityList[indexPath.row].lon)")
+            var latloncoordinates = "\(cityList[indexPath.row].lat), \(cityList[indexPath.row].lon)"
+            weatherService.getWeatherFromCoordinates(coordinates: latloncoordinates)
         }
         
         cityList.removeAll()
         self.tableView.reloadData()
         self.tableView.isHidden = true
-        searchBar.text = ""
-        searchBar.resignFirstResponder()
+        self.searchBar.text = ""
+        self.searchBar.resignFirstResponder()
         self.navigationItem.rightBarButtonItem = searchBarButton
 
     }

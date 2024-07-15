@@ -10,13 +10,12 @@ protocol WeatherManagerDelegate {
 let APIKey = "abbac59e4cf84b918c3142625241207"
 let baseURL = "http://api.weatherapi.com/v1"
 
-struct WeatherDataService {
+struct WeatherServiceWorker {
     var delegate : WeatherManagerDelegate?
-    
     let currentLocationURL = "\(baseURL)/current.json?key=\(APIKey)&q="
     let searchLocationURL = "\(baseURL)/search.json?key=\(APIKey)&q="
     
-    func getWeatherApi(coordinates: String) {
+    func getWeatherFromCoordinates(coordinates: String) {
         delegate?.startLoading()
         guard let url = URL(string: "\(currentLocationURL)\(coordinates)") else {
             let error = NSError(domain: "Invalid URL", code: 400, userInfo: nil)
@@ -60,7 +59,7 @@ struct WeatherDataService {
     }
     
     
-    func getWeatherFromCity(city: String) {
+    func getWeatherFromLocationSearch(city: String) {
         guard let url = URL(string: "\(searchLocationURL)\(city)") else {
             let error = NSError(domain: "Invalid URL", code: 400, userInfo: nil)
             delegate?.didFailWithError(error: error)
@@ -85,7 +84,6 @@ struct WeatherDataService {
                 }
                 return
             }
-            print("incomisdng", data)
 
             let decoder = JSONDecoder()
             do {
