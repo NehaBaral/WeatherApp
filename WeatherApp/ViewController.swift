@@ -3,7 +3,7 @@ import CoreLocation
 
 class ViewController: UIViewController {
 
-    @IBOutlet var searchIcon: UIImageView!
+//    @IBOutlet var searchIcon: UIImageView!
     @IBOutlet var weatherImage: UIImageView!
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var locationItem: UIBarButtonItem!
@@ -14,6 +14,9 @@ class ViewController: UIViewController {
     @IBOutlet var switchButton: UISegmentedControl!
     @IBOutlet weak var loading: UIActivityIndicatorView!
 
+    @IBOutlet var cancelButton: UIBarButtonItem!
+    @IBOutlet var searchBarButton: UIBarButtonItem!
+    
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
     
@@ -40,7 +43,9 @@ class ViewController: UIViewController {
         // Navigation Item
         self.navigationItem.titleView = searchBar
         self.navigationItem.leftBarButtonItem = locationItem
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchIcon)
+        self.navigationItem.rightBarButtonItem = searchBarButton
+        
+//        UIBarButtonItem(customView: searchIcon)
         searchBar.setImage(UIImage(), for: .search, state: .normal)
         
        // searchBar.searchTextField.textAlignment = .right
@@ -57,15 +62,27 @@ class ViewController: UIViewController {
         switchButton.setTitleTextAttributes([.foregroundColor: UIColor.blue], for: .normal)
         
         // Add tap gesture recognizer to the search icon
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(searchIconTapped))
-        searchIcon.isUserInteractionEnabled = true
-        searchIcon.addGestureRecognizer(tapGestureRecognizer)
+//        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(searchIconTapped))
+//        searchIcon.isUserInteractionEnabled = true
+//        searchIcon.addGestureRecognizer(tapGestureRecognizer)
         
         // Request initial location to display weather info
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
     }
+    
+    
+    @IBAction func cancelButton(_ sender: UIBarButtonItem) {
+        tableView.isHidden = true
+        searchBar.resignFirstResponder()
+        self.navigationItem.rightBarButtonItem = searchBarButton
+    }
+    @IBAction func searchButton(_ sender: UIBarButtonItem) {
+        tableView.isHidden = false
+        searchBar.becomeFirstResponder()
+        self.navigationItem.rightBarButtonItem = cancelButton
 
+    }
     //Updating out own location in weatherapp
     @IBAction func locationButton(_ sender: UIBarButtonItem) {
         locationManager.requestWhenInUseAuthorization()
@@ -126,12 +143,12 @@ class ViewController: UIViewController {
     }
     
     
-    @objc func searchIconTapped() {
-        if let searchText = searchBar.text, !searchText.isEmpty {
-            weatherDetails(location: searchText)
-        }
-        searchBar.resignFirstResponder()
-    }
+//    @objc func searchIconTapped() {
+//        if let searchText = searchBar.text, !searchText.isEmpty {
+//            weatherDetails(location: searchText)
+//        }
+//        searchBar.resignFirstResponder()
+//    }
     
     //function to show alert
     private func showAlert(){
@@ -244,7 +261,7 @@ extension ViewController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         tableView.isHidden = false
-            
+        self.navigationItem.rightBarButtonItem = cancelButton
         
         }
     
@@ -294,5 +311,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             self.tableView.isHidden = true
             searchBar.text = ""
             searchBar.resignFirstResponder()
+            self.navigationItem.rightBarButtonItem = searchBarButton
+
         }
 }
