@@ -22,9 +22,9 @@ class ViewController: UIViewController {
     private let locationManager = CLLocationManager()
     var cityList: [City] = []
     var weatherService = WeatherServiceWorker()
-    var searchedCitiesWeather: [weatherDataObject] = []
+    var searchedCitiesWeather: [weatherModel] = []
     var isCelsius: Bool = true
-    var currentWeatherInfo: weatherDataObject?
+    var currentWeatherInfo: weatherModel?
     
     @IBAction func cityButtonClicked(_ sender: Any) {
         performSegue(withIdentifier: "weatherListScreen", sender: self)
@@ -88,7 +88,7 @@ class ViewController: UIViewController {
         weatherService.getWeatherFromCoordinates(coordinates: location)
     }
     
-    func addCityWeather(_ weather: weatherDataObject) {
+    func addCityWeather(_ weather: weatherModel) {
         if let existingIndex = searchedCitiesWeather.firstIndex(where: { $0.location.lat == weather.location.lat && $0.location.lon == weather.location.lon }) {
               searchedCitiesWeather[existingIndex] = weather
           } else {
@@ -158,7 +158,7 @@ extension ViewController: WeatherManagerDelegate {
         self.cityList = info
     }
     
-    func didUpdateWeatherInformation(info: weatherDataObject) {
+    func didUpdateWeatherInformation(info: weatherModel) {
         DispatchQueue.main.async {
             self.loading.stopAnimating()
             self.currentWeatherInfo = info

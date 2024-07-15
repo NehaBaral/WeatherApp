@@ -2,7 +2,7 @@ import UIKit
 
 class SecondScreenViewController: UIViewController {
     
-    var citiesWeather: [weatherDataObject] = [] 
+    var citiesWeather: [weatherModel] = [] 
     var isCelsius: Bool = true
     
     @IBOutlet weak var emptyData: UILabel!
