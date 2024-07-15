@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct weatherDataObject: Decodable 
+struct weatherModel: Decodable
 {
     let current: Current
     let location: Location

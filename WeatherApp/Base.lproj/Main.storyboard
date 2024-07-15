@@ -78,6 +78,20 @@
                                     <constraint firstAttribute="width" constant="40" id="GgL-hY-Wrg"/>
                                 </constraints>
                             </activityIndicatorView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="CQo-fT-A6w">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="searchcell" id="3kR-f7-a8A">
+                                        <rect key="frame" x="0.0" y="50" width="414" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3kR-f7-a8A" id="VuE-d9-7iB">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="0.45138680930000002" green="0.99309605359999997" blue="1" alpha="0.8967818708609272" colorSpace="custom" customColorSpace="sRGB"/>
@@ -87,10 +101,14 @@
                             <constraint firstItem="Lup-GV-Xqe" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="7nc-ez-d9f"/>
                             <constraint firstItem="gYV-0v-pGK" firstAttribute="trailing" secondItem="N3R-Uy-t1c" secondAttribute="trailing" id="CBi-Vj-do3"/>
                             <constraint firstItem="N3R-Uy-t1c" firstAttribute="leading" secondItem="L8x-pL-pKN" secondAttribute="trailing" constant="8" id="JW9-bc-A1R"/>
+                            <constraint firstItem="CQo-fT-A6w" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="O36-TT-mHQ"/>
                             <constraint firstItem="N3R-Uy-t1c" firstAttribute="bottom" secondItem="L8x-pL-pKN" secondAttribute="bottom" id="TNE-sL-yDV"/>
                             <constraint firstItem="gYV-0v-pGK" firstAttribute="top" secondItem="N3R-Uy-t1c" secondAttribute="bottom" constant="20" id="UEE-gj-Jqo"/>
                             <constraint firstItem="s8v-qT-A72" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="UoT-Hf-gwV"/>
+                            <constraint firstItem="CQo-fT-A6w" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="VN7-vz-xjS"/>
                             <constraint firstItem="cho-oX-0an" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="W5f-kg-HKn"/>
+                            <constraint firstAttribute="bottom" secondItem="CQo-fT-A6w" secondAttribute="bottom" id="Xjr-ig-u2Z"/>
+                            <constraint firstItem="CQo-fT-A6w" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="aaz-uI-Sbr"/>
                             <constraint firstItem="gYV-0v-pGK" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="dCI-8r-nV1"/>
                             <constraint firstItem="L8x-pL-pKN" firstAttribute="leading" secondItem="ED5-Jw-d0w" secondAttribute="leading" constant="5" id="eTb-di-cmA"/>
                             <constraint firstItem="ED5-Jw-d0w" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="eXS-jg-5sC"/>
@@ -107,13 +125,15 @@
                     </view>
                     <navigationItem key="navigationItem" style="browser" id="6eB-qz-QDk"/>
                     <connections>
+                        <outlet property="cancelButton" destination="cwy-VG-Gz9" id="dB1-Ba-TK4"/>
                         <outlet property="city" destination="gYV-0v-pGK" id="Ldv-QQ-Uem"/>
                         <outlet property="cityButton" destination="cho-oX-0an" id="M9A-KG-3CE"/>
                         <outlet property="loading" destination="s8v-qT-A72" id="OYX-Am-1hN"/>
                         <outlet property="locationItem" destination="cct-FW-5Ic" id="kuA-6c-6SZ"/>
                         <outlet property="searchBar" destination="yTG-5u-LuT" id="Obq-Me-1V4"/>
-                        <outlet property="searchIcon" destination="IiV-vj-fv9" id="Vs6-Ko-FXN"/>
+                        <outlet property="searchBarButton" destination="z9t-Vi-jkU" id="vJO-eo-PJf"/>
                         <outlet property="switchButton" destination="N3R-Uy-t1c" id="G4Q-mx-eZ0"/>
+                        <outlet property="tableView" destination="CQo-fT-A6w" id="Hy5-xl-0xy"/>
                         <outlet property="temperature" destination="L8x-pL-pKN" id="zdE-PR-7MJ"/>
                         <outlet property="weatherCondition" destination="qPZ-vs-rvD" id="Hrj-AI-vji"/>
                         <outlet property="weatherImage" destination="ED5-Jw-d0w" id="NhI-N2-bTq"/>
@@ -133,18 +153,25 @@
                         <outlet property="delegate" destination="BYZ-38-t0r" id="v9V-2k-uCE"/>
                     </connections>
                 </searchBar>
-                <barButtonItem title="Item" id="cct-FW-5Ic">
+                <barButtonItem title="Navigation" id="cct-FW-5Ic">
                     <imageReference key="image" image="location.circle" catalog="system" symbolScale="large"/>
                     <connections>
                         <action selector="locationButton:" destination="BYZ-38-t0r" id="IAX-4r-Dcm"/>
                     </connections>
                 </barButtonItem>
-                <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="magnifyingglass" catalog="system" id="IiV-vj-fv9">
-                    <rect key="frame" x="0.0" y="0.0" width="20" height="18.666666666666664"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                </imageView>
+                <barButtonItem title="Search" id="z9t-Vi-jkU">
+                    <imageReference key="image" image="magnifyingglass" catalog="system" symbolScale="large"/>
+                    <connections>
+                        <action selector="searchButton:" destination="BYZ-38-t0r" id="6XS-pa-7Fe"/>
+                    </connections>
+                </barButtonItem>
+                <barButtonItem title="Cancel" id="cwy-VG-Gz9">
+                    <connections>
+                        <action selector="cancelButton:" destination="BYZ-38-t0r" id="V2v-9N-SWb"/>
+                    </connections>
+                </barButtonItem>
             </objects>
-            <point key="canvasLocation" x="1065.4205607476636" y="3.2397408207343417"/>
+            <point key="canvasLocation" x="1065.217391304348" y="2.4456521739130435"/>
         </scene>
         <!--Location History-->
         <scene sceneID="2pG-vX-YbU">
@@ -268,7 +295,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

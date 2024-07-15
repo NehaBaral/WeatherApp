@@ -3,7 +3,6 @@ import CoreLocation
 
 class ViewController: UIViewController {
 
-    @IBOutlet var searchIcon: UIImageView!
     @IBOutlet var weatherImage: UIImageView!
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var locationItem: UIBarButtonItem!
@@ -14,32 +13,42 @@ class ViewController: UIViewController {
     @IBOutlet var switchButton: UISegmentedControl!
     @IBOutlet weak var loading: UIActivityIndicatorView!
 
-    var weatherData = WeatherDataService()
+    @IBOutlet var cancelButton: UIBarButtonItem!
+    @IBOutlet var searchBarButton: UIBarButtonItem!
+    
+
+    @IBOutlet weak var tableView: UITableView!
+    
     private let locationManager = CLLocationManager()
-    var searchedCitiesWeather: [weatherDataObject] = []
+    var cityList: [City] = []
+    var weatherService = WeatherServiceWorker()
+    var searchedCitiesWeather: [weatherModel] = []
     var isCelsius: Bool = true
-    var currentWeatherInfo: weatherDataObject?
+    var currentWeatherInfo: weatherModel?
     
     @IBAction func cityButtonClicked(_ sender: Any) {
         performSegue(withIdentifier: "weatherListScreen", sender: self)
-        
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
-        weatherData.delegate = self
-    
+        weatherService.delegate = self
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.isHidden = true
+        locationManager.delegate = self
+        
         // Navigation Item
         self.navigationItem.titleView = searchBar
         self.navigationItem.leftBarButtonItem = locationItem
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchIcon)
+        self.navigationItem.rightBarButtonItem = searchBarButton
+        
         searchBar.setImage(UIImage(), for: .search, state: .normal)
         
        // searchBar.searchTextField.textAlignment = .right
         searchBar.searchTextField.placeholder = "Search Location"
         
-        locationManager.delegate = self
         
         // Set up segmented control action
         switchButton.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
@@ -49,14 +58,23 @@ class ViewController: UIViewController {
         // color of other options
         switchButton.setTitleTextAttributes([.foregroundColor: UIColor.blue], for: .normal)
         
-        // Add tap gesture recognizer to the search icon
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(searchIconTapped))
-        searchIcon.isUserInteractionEnabled = true
-        searchIcon.addGestureRecognizer(tapGestureRecognizer)
-        
         // Request initial location to display weather info
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
+    }
+    
+    
+    @IBAction func cancelButton(_ sender: UIBarButtonItem) {
+        tableView.isHidden = true
+        searchBar.resignFirstResponder()
+        self.navigationItem.rightBarButtonItem = searchBarButton
+    }
+    
+    @IBAction func searchButton(_ sender: UIBarButtonItem) {
+        tableView.isHidden = false
+        searchBar.becomeFirstResponder()
+        self.navigationItem.rightBarButtonItem = cancelButton
+
     }
     
     //Updating out own location in weatherapp
@@ -65,15 +83,12 @@ class ViewController: UIViewController {
         locationManager.requestLocation()
     }
     
-    private func displayLocation(locationText: String) {
-        weatherDetails(location: locationText)
-    }
 
     func weatherDetails(location: String) {
-        weatherData.getWeatherApi(coordinates: location)
+        weatherService.getWeatherFromCoordinates(coordinates: location)
     }
-
-    func addCityWeather(_ weather: weatherDataObject) {
+    
+    func addCityWeather(_ weather: weatherModel) {
         if let existingIndex = searchedCitiesWeather.firstIndex(where: { $0.location.lat == weather.location.lat && $0.location.lon == weather.location.lon }) {
               searchedCitiesWeather[existingIndex] = weather
           } else {
@@ -104,8 +119,6 @@ class ViewController: UIViewController {
         }
     }
 
-
-
     
     @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         isCelsius = sender.selectedSegmentIndex == 0
@@ -118,13 +131,6 @@ class ViewController: UIViewController {
         }
     }
     
-    
-    @objc func searchIconTapped() {
-        if let searchText = searchBar.text, !searchText.isEmpty {
-            weatherDetails(location: searchText)
-        }
-        searchBar.resignFirstResponder()
-    }
     
     //function to show alert
     private func showAlert(){
@@ -148,9 +154,11 @@ extension ViewController: WeatherManagerDelegate {
         showAlert()
     }
     
+    func didRecieveCities(info: [City]) {
+        self.cityList = info
+    }
     
-    
-    func didUpdateWeatherInformation(info: weatherDataObject) {
+    func didUpdateWeatherInformation(info: weatherModel) {
         DispatchQueue.main.async {
             self.loading.stopAnimating()
             self.currentWeatherInfo = info
@@ -212,7 +220,7 @@ extension ViewController: CLLocationManagerDelegate {
         if let location = locations.last {
             let latitude = location.coordinate.latitude
             let longitude = location.coordinate.longitude
-            displayLocation(locationText: "\(latitude),\(longitude)")
+            weatherDetails(location: "\(latitude),\(longitude)")
         }else{
             return
         }
@@ -232,8 +240,55 @@ extension ViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
     }
     
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        tableView.isHidden = false
+        self.navigationItem.rightBarButtonItem = cancelButton
+        }
+    
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // have to work on search
-        //i think we need to show recommendation when we add text on search bar
+        tableView.isHidden = false
+        weatherService.getWeatherFromLocationSearch(city: searchText)
+        
+        if searchText.isEmpty {
+            print("Clear button (X button) was tapped in the search bar.")
+            self.tableView.isHidden = true
+        }
+        self.tableView.reloadData()
+    }
+}
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return cityList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "searchcell", for: indexPath)
+        
+        if indexPath.row < cityList.count {
+            let cityName = cityList[indexPath.row]
+            cell.textLabel?.text = "\(cityName.name), \(cityName.region), \(cityName.country)"
+        } else {
+            print("Index out of bounds: \(indexPath.row)")
+        }
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if indexPath.row < cityList.count {
+            var latloncoordinates = "\(cityList[indexPath.row].lat), \(cityList[indexPath.row].lon)"
+            weatherService.getWeatherFromCoordinates(coordinates: latloncoordinates)
+        }
+        
+        cityList.removeAll()
+        self.tableView.reloadData()
+        self.tableView.isHidden = true
+        self.searchBar.text = ""
+        self.searchBar.resignFirstResponder()
+        self.navigationItem.rightBarButtonItem = searchBarButton
+
     }
 }
