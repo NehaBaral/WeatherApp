@@ -134,7 +134,6 @@
                         <outlet property="searchBarButton" destination="z9t-Vi-jkU" id="vJO-eo-PJf"/>
                         <outlet property="switchButton" destination="N3R-Uy-t1c" id="G4Q-mx-eZ0"/>
                         <outlet property="tableView" destination="CQo-fT-A6w" id="Hy5-xl-0xy"/>
-                        <outlet property="tableViewHeight" destination="Xjr-ig-u2Z" id="LGs-d1-KOf"/>
                         <outlet property="temperature" destination="L8x-pL-pKN" id="zdE-PR-7MJ"/>
                         <outlet property="weatherCondition" destination="qPZ-vs-rvD" id="Hrj-AI-vji"/>
                         <outlet property="weatherImage" destination="ED5-Jw-d0w" id="NhI-N2-bTq"/>
