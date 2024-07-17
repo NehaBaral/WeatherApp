@@ -21,6 +21,7 @@ class ViewController: UIViewController {
     
     private let locationManager = CLLocationManager()
     var cityList: [City] = []
+    var filteredCities: [City] = []
     var weatherService = WeatherServiceWorker()
     var searchedCitiesWeather: [weatherModel] = []
     var isCelsius: Bool = true
@@ -38,7 +39,7 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         tableView.isHidden = true
         locationManager.delegate = self
-        
+        filteredCities = cityList
         // Navigation Item
         self.navigationItem.titleView = searchBar
         self.navigationItem.leftBarButtonItem = locationItem
@@ -151,11 +152,12 @@ extension ViewController: WeatherManagerDelegate {
     
     func didFailWithError(error: any Error) {
         loading.stopAnimating()
+        print("sd")
         showAlert()
     }
     
     func didRecieveCities(info: [City]) {
-        self.cityList = info
+        cityList = info
     }
     
     func didUpdateWeatherInformation(info: weatherModel) {
@@ -166,7 +168,7 @@ extension ViewController: WeatherManagerDelegate {
             self.city.text = info.location.name
             self.addCityWeather(info)
             self.updateTemperatureLabel()
-          
+                      
             var iconURLString = info.current.condition.icon
             if !iconURLString.hasPrefix("http://") && !iconURLString.hasPrefix("https://") {
                 iconURLString = "https:" + iconURLString
@@ -237,7 +239,7 @@ extension ViewController: UISearchBarDelegate {
         if let searchText = searchBar.text, !searchText.isEmpty {
             weatherDetails(location: searchText)
         }
-        searchBar.resignFirstResponder()
+        self.searchBar.resignFirstResponder()
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -245,11 +247,12 @@ extension ViewController: UISearchBarDelegate {
         self.navigationItem.rightBarButtonItem = cancelButton
         }
     
-    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         tableView.isHidden = false
         weatherService.getWeatherFromLocationSearch(city: searchText)
-        
+        if(cityList.count != 0) {
+            filteredCities = cityList
+        }
         if searchText.isEmpty {
             print("Clear button (X button) was tapped in the search bar.")
             self.tableView.isHidden = true
@@ -260,35 +263,34 @@ extension ViewController: UISearchBarDelegate {
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cityList.count
+        return filteredCities.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "searchcell", for: indexPath)
-        
-        if indexPath.row < cityList.count {
-            let cityName = cityList[indexPath.row]
+            let cell = tableView.dequeueReusableCell(withIdentifier: "searchcell", for: indexPath) as UITableViewCell
+            let cityName = filteredCities[indexPath.row]
+        if cityName.region != "" {
             cell.textLabel?.text = "\(cityName.name), \(cityName.region), \(cityName.country)"
-        } else {
-            print("Index out of bounds: \(indexPath.row)")
         }
-        
-        return cell
+        else {
+            cell.textLabel?.text = "\(cityName.name), \(cityName.country)"
+        }
+            return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        if indexPath.row < cityList.count {
-            var latloncoordinates = "\(cityList[indexPath.row].lat), \(cityList[indexPath.row].lon)"
-            weatherService.getWeatherFromCoordinates(coordinates: latloncoordinates)
-        }
-        
-        cityList.removeAll()
-        self.tableView.reloadData()
-        self.tableView.isHidden = true
-        self.searchBar.text = ""
-        self.searchBar.resignFirstResponder()
-        self.navigationItem.rightBarButtonItem = searchBarButton
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+     
+            let latloncoordinates = "\(filteredCities[indexPath.row].lat), \(filteredCities[indexPath.row].lon)"
+            weatherService.getWeatherFromCoordinates(coordinates: latloncoordinates)
+        filteredCities.removeAll()
+            self.tableView.reloadData()
+            self.tableView.isHidden = true
+            self.searchBar.text = ""
+            self.searchBar.resignFirstResponder()
+            self.navigationItem.rightBarButtonItem = searchBarButton
+        
     }
-}
+        
+    }
+//}
