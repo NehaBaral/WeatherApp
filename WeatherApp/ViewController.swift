@@ -165,33 +165,28 @@ extension ViewController: WeatherManagerDelegate {
             self.loading.stopAnimating()
             self.currentWeatherInfo = info
             self.weatherCondition.text = info.current.condition.text
-            self.city.text = info.location.name
+            self.city.text = info.location.name 
+            //+ ", " + info.location.country
             self.addCityWeather(info)
             self.updateTemperatureLabel()
-                      
-            var iconURLString = info.current.condition.icon
-            if !iconURLString.hasPrefix("http://") && !iconURLString.hasPrefix("https://") {
-                iconURLString = "https:" + iconURLString
-            }
+                     
+            let (symbol, color) = getWeatherSymbolAndColor(forCode: info.current.condition.code,
+                                                           isDay: info.current.is_day)
+                               
+                               if let symbol = symbol, let color = color {
+                                   let iconImage = UIImage(systemName: symbol)?.withTintColor(color, renderingMode: .alwaysOriginal)
+                                 
+                                   self.weatherImage.image = iconImage!
+                                   
+                               } else {
+                                   print("Weather symbol or color not found for code ")
+                               }
             
-            if let iconURL = URL(string: iconURLString) {
-                self.loadImage(from: iconURL)
-            }
+           
         }
     }
     
-    private func loadImage(from url: URL) {
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            if let data = data, error == nil {
-                DispatchQueue.main.async {
-                    self.weatherImage.image = UIImage(data: data)
-                }
-            } else {
-                print("Error loading image: \(String(describing: error))")
-            }
-        }
-        task.resume()
-    }
+    
 }
 
 extension ViewController: CLLocationManagerDelegate {
@@ -257,7 +252,7 @@ extension ViewController: UISearchBarDelegate {
         if !searchText.isEmpty {
             weatherService.getWeatherFromLocationSearch(city: searchText)
         } else {
-            print("ji")
+          
             filteredCities.removeAll()
                 self.tableView.reloadData()
         }

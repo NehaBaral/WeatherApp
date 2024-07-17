@@ -25,7 +25,8 @@ struct Current: Decodable {
 //    let heatindexC: String
 //    let heatindexF: String
 //    let humidity: Int
-//    let isDay: Int
+  let is_day: Int
+    
 //    let lastUpdated: String
 //    let lastUpdatedEpoch: Double
 //    let precipIn: Double

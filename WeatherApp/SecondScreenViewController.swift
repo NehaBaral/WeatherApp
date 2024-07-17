@@ -19,7 +19,7 @@ class SecondScreenViewController: UIViewController {
 }
 
 extension SecondScreenViewController : UITableViewDataSource{
-    //Indicate number of items in the list
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return citiesWeather.count
     }
@@ -34,22 +34,20 @@ extension SecondScreenViewController : UITableViewDataSource{
         
         cell?.descView.text = "\(weatherData.current.condition.text)"
         
-        var iconURLString = weatherData.current.condition.icon
-        if !iconURLString.hasPrefix("http://") && !iconURLString.hasPrefix("https://") {
-            iconURLString = "https:" + iconURLString
-        }
         
-        // Load image asynchronously
-        if let imageURL = URL(string: iconURLString) {
-            DispatchQueue.global().async {
-                if let imageData = try? Data(contentsOf: imageURL) {
-                    DispatchQueue.main.async {
-                        let image = UIImage(data: imageData)
-                        cell?.weatherConditionImg?.image = image
-                    }
-                }
-            }
+        
+        let (symbol, color) = getWeatherSymbolAndColor(forCode: weatherData.current.condition.code,
+                                                       isDay: weatherData.current.is_day)
+        
+        if let symbol = symbol, let color = color {
+            let iconImage = UIImage(systemName: symbol)?.withTintColor(color, renderingMode: .alwaysOriginal)
+           
+            cell?.weatherConditionImg?.image = iconImage!
+            
+        } else {
+            print("Weather symbol or color not found for code ")
         }
+    
         
         return cell ?? UITableViewCell()
     }
