@@ -108,23 +108,25 @@ let nightWeatherCodeToSymbol: [Int: String] = [
 
 
 
-func getWeatherSymbolAndColor(forCode code: Int, isDay: Int) -> (symbol: String?, color: UIColor?) {
+func getWeatherSymbolAndColor(forCode code: Int, isDay: Int) -> (symbol: String?, color1: UIColor?,color2:UIColor?) {
     let symbol = isDay == 1 ? dayWeatherCodeToSymbol[code] : nightWeatherCodeToSymbol[code]
     
     if isDay == 1 {
         switch code {
-        case 1000, 1003:
-            return(symbol,UIColor.yellow)
+        case 1003:
+            return(symbol,UIColor.white,UIColor.yellow)
+        case 1000:
+            return(symbol,UIColor.yellow,UIColor.white)
         case 1273, 1276, 1279, 1282:
-            return (symbol, UIColor.blue)
+            return (symbol, UIColor.darkGray, UIColor.purple)
+        case 1150:
+            return (symbol, UIColor.gray, UIColor.blue)
         default:
-            let color = UIColor.systemBlue.withAlphaComponent(0.6)
-            return (symbol, color)
+            let color = UIColor.gray.withAlphaComponent(0.6)
+            return (symbol, color, UIColor.blue)
         }
     } else {
-       
-        return (symbol, UIColor.lightGray)
-    
+        return (symbol, UIColor.lightGray, UIColor.brown)
 }
 
 

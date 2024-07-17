@@ -54,7 +54,6 @@ struct WeatherServiceWorker {
             do {
                 if(currentLocation) {
                     let response = try decoder.decode(weatherModel.self, from: data)
-                 
                     DispatchQueue.main.async {
                         self.delegate?.didUpdateWeatherInformation(info: response)
                     }

@@ -4,6 +4,7 @@ class SecondScreenViewController: UIViewController {
     
     var citiesWeather: [weatherModel] = [] 
     var isCelsius: Bool = true
+    let cellSpacingHeight: CGFloat = 140
     
     @IBOutlet weak var emptyData: UILabel!
     
@@ -13,6 +14,7 @@ class SecondScreenViewController: UIViewController {
         emptyData.isHidden = citiesWeather.isEmpty == false
         tableView.dataSource = self
         tableView.delegate = self
+        self.tableView.layer.cornerRadius = 10.0
     }
     
     
@@ -23,6 +25,11 @@ extension SecondScreenViewController : UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return citiesWeather.count
     }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return cellSpacingHeight
+    }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListTableViewCellIdentifier", for: indexPath) as? SecondScreenTableViewCell
@@ -36,12 +43,13 @@ extension SecondScreenViewController : UITableViewDataSource{
         
         
         
-        let (symbol, color) = getWeatherSymbolAndColor(forCode: weatherData.current.condition.code,
+        let (symbol, color1, color2) = getWeatherSymbolAndColor(forCode: weatherData.current.condition.code,
                                                        isDay: weatherData.current.is_day)
         
-        if let symbol = symbol, let color = color {
-            let iconImage = UIImage(systemName: symbol)?.withTintColor(color, renderingMode: .alwaysOriginal)
-           
+        if let symbol = symbol, let color1 = color1, let color2 = color2 {
+            let iconImage = UIImage(systemName: symbol)
+            let config = UIImage.SymbolConfiguration(paletteColors: [color1,color2])
+            cell?.weatherConditionImg.preferredSymbolConfiguration = config
             cell?.weatherConditionImg?.image = iconImage!
             
         } else {

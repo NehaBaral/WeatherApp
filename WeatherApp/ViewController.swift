@@ -170,12 +170,13 @@ extension ViewController: WeatherManagerDelegate {
             self.addCityWeather(info)
             self.updateTemperatureLabel()
                      
-            let (symbol, color) = getWeatherSymbolAndColor(forCode: info.current.condition.code,
-                                                           isDay: info.current.is_day)
+            let (symbol, color1, color2) = getWeatherSymbolAndColor(forCode: info.current.condition.code,
+                                                        isDay: info.current.is_day)
                                
-                               if let symbol = symbol, let color = color {
-                                   let iconImage = UIImage(systemName: symbol)?.withTintColor(color, renderingMode: .alwaysOriginal)
-                                 
+                               if let symbol = symbol, let color1 = color1, let color2 = color2 {
+                                   let config = UIImage.SymbolConfiguration(paletteColors: [color1,color2])
+                                   self.weatherImage.preferredSymbolConfiguration = config
+                                   let iconImage = UIImage(systemName: symbol)
                                    self.weatherImage.image = iconImage!
                                    
                                } else {
