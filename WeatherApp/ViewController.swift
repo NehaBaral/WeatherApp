@@ -66,6 +66,9 @@ class ViewController: UIViewController {
     
     
     @IBAction func cancelButton(_ sender: UIBarButtonItem) {
+        filteredCities.removeAll()
+        self.tableView.reloadData()
+        self.searchBar.text = ""
         tableView.isHidden = true
         searchBar.resignFirstResponder()
         self.navigationItem.rightBarButtonItem = searchBarButton
@@ -93,7 +96,6 @@ class ViewController: UIViewController {
         if let existingIndex = searchedCitiesWeather.firstIndex(where: { $0.location.lat == weather.location.lat && $0.location.lon == weather.location.lon }) {
               searchedCitiesWeather[existingIndex] = weather
           } else {
-           
               searchedCitiesWeather.append(weather)
           }
     }
@@ -137,7 +139,6 @@ class ViewController: UIViewController {
     private func showAlert(){
         let alert = UIAlertController(title: "Weather Fetching Error", message: "Try Again", preferredStyle: .alert)
         let okButton = UIAlertAction(title: "Ok", style: .default){[self] _ in
-          //  loginBtn.isEnabled = false
         }
         alert.addAction(okButton)
         present(alert,animated: true ,completion: nil)
@@ -152,7 +153,6 @@ extension ViewController: WeatherManagerDelegate {
     
     func didFailWithError(error: any Error) {
         loading.stopAnimating()
-        print("sd")
         showAlert()
     }
     
@@ -245,17 +245,21 @@ extension ViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         tableView.isHidden = false
         self.navigationItem.rightBarButtonItem = cancelButton
-        }
+    }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         tableView.isHidden = false
-        weatherService.getWeatherFromLocationSearch(city: searchText)
+        
         if(cityList.count != 0) {
             filteredCities = cityList
         }
-        if searchText.isEmpty {
-            print("Clear button (X button) was tapped in the search bar.")
-            self.tableView.isHidden = true
+        
+        if !searchText.isEmpty {
+            weatherService.getWeatherFromLocationSearch(city: searchText)
+        } else {
+            print("ji")
+            filteredCities.removeAll()
+                self.tableView.reloadData()
         }
         self.tableView.reloadData()
     }
@@ -267,30 +271,30 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "searchcell", for: indexPath) as UITableViewCell
-            let cityName = filteredCities[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "searchcell", for: indexPath) as UITableViewCell
+        let cityName = filteredCities[indexPath.row]
+        
         if cityName.region != "" {
             cell.textLabel?.text = "\(cityName.name), \(cityName.region), \(cityName.country)"
         }
         else {
             cell.textLabel?.text = "\(cityName.name), \(cityName.country)"
         }
-            return cell
+        
+        return cell
     }
     
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-     
-            let latloncoordinates = "\(filteredCities[indexPath.row].lat), \(filteredCities[indexPath.row].lon)"
-            weatherService.getWeatherFromCoordinates(coordinates: latloncoordinates)
+        let latloncoordinates = "\(filteredCities[indexPath.row].lat), \(filteredCities[indexPath.row].lon)"
+        weatherDetails(location: latloncoordinates)
+        
         filteredCities.removeAll()
             self.tableView.reloadData()
             self.tableView.isHidden = true
             self.searchBar.text = ""
             self.searchBar.resignFirstResponder()
             self.navigationItem.rightBarButtonItem = searchBarButton
+        }
         
     }
-        
-    }
-//}
