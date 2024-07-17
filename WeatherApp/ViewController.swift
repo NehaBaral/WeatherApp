@@ -233,7 +233,12 @@ extension ViewController: CLLocationManagerDelegate {
 extension ViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let searchText = searchBar.text, !searchText.isEmpty {
-            weatherDetails(location: searchText)
+            weatherService.getWeatherFromCoordinates(coordinates: searchBar.text ?? "")
+            filteredCities.removeAll()
+            self.tableView.reloadData()
+            self.searchBar.text = ""
+            tableView.isHidden = true
+            self.navigationItem.rightBarButtonItem = searchBarButton
         }
         self.searchBar.resignFirstResponder()
     }
