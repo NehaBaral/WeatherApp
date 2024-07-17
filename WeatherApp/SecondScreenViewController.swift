@@ -4,6 +4,7 @@ class SecondScreenViewController: UIViewController {
     
     var citiesWeather: [weatherModel] = [] 
     var isCelsius: Bool = true
+    let cellSpacingHeight: CGFloat = 140
     
     @IBOutlet weak var emptyData: UILabel!
     
@@ -13,16 +14,22 @@ class SecondScreenViewController: UIViewController {
         emptyData.isHidden = citiesWeather.isEmpty == false
         tableView.dataSource = self
         tableView.delegate = self
+        self.tableView.layer.cornerRadius = 10.0
     }
     
     
 }
 
 extension SecondScreenViewController : UITableViewDataSource{
-    //Indicate number of items in the list
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return citiesWeather.count
     }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return cellSpacingHeight
+    }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListTableViewCellIdentifier", for: indexPath) as? SecondScreenTableViewCell
@@ -34,22 +41,21 @@ extension SecondScreenViewController : UITableViewDataSource{
         
         cell?.descView.text = "\(weatherData.current.condition.text)"
         
-        var iconURLString = weatherData.current.condition.icon
-        if !iconURLString.hasPrefix("http://") && !iconURLString.hasPrefix("https://") {
-            iconURLString = "https:" + iconURLString
-        }
         
-        // Load image asynchronously
-        if let imageURL = URL(string: iconURLString) {
-            DispatchQueue.global().async {
-                if let imageData = try? Data(contentsOf: imageURL) {
-                    DispatchQueue.main.async {
-                        let image = UIImage(data: imageData)
-                        cell?.weatherConditionImg?.image = image
-                    }
-                }
-            }
+        
+        let (symbol, color1, color2) = getWeatherSymbolAndColor(forCode: weatherData.current.condition.code,
+                                                       isDay: weatherData.current.is_day)
+        
+        if let symbol = symbol, let color1 = color1, let color2 = color2 {
+            let iconImage = UIImage(systemName: symbol)
+            let config = UIImage.SymbolConfiguration(paletteColors: [color1,color2])
+            cell?.weatherConditionImg.preferredSymbolConfiguration = config
+            cell?.weatherConditionImg?.image = iconImage!
+            
+        } else {
+            print("Weather symbol or color not found for code ")
         }
+    
         
         return cell ?? UITableViewCell()
     }

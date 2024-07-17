@@ -177,16 +177,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="kqN-mq-kAm">
-                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
+                                <rect key="frame" x="8" y="64" width="398" height="672"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ListTableViewCellIdentifier" rowHeight="102" id="ZVd-av-fNA" customClass="SecondScreenTableViewCell" customModule="WeatherApp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="50" width="414" height="102"/>
+                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ListTableViewCellIdentifier" rowHeight="102" id="ZVd-av-fNA" customClass="SecondScreenTableViewCell" customModule="WeatherApp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="398" height="102"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZVd-av-fNA" id="ddZ-fA-Rra">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="102"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="398" height="102"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tableitem-bg" translatesAutoresizingMaskIntoConstraints="NO" id="8cF-3S-ivS">
+                                                    <rect key="frame" x="0.0" y="0.0" width="398" height="102"/>
+                                                </imageView>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nT8-ku-1Zh">
                                                     <rect key="frame" x="8" y="1" width="125" height="100"/>
                                                     <constraints>
@@ -195,28 +198,32 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="titleView" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="53q-NU-r9q">
-                                                    <rect key="frame" x="141" y="19" width="252" height="24"/>
+                                                    <rect key="frame" x="141" y="19" width="236" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="EXz-Hx-b7h"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                    <color key="textColor" systemColor="tintColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="descView" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w5C-zl-0QT">
-                                                    <rect key="frame" x="141" y="47" width="249" height="64"/>
+                                                    <rect key="frame" x="141" y="47" width="233" height="64"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                    <color key="textColor" systemColor="tintColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="8cF-3S-ivS" firstAttribute="leading" secondItem="ddZ-fA-Rra" secondAttribute="leading" id="3K3-zF-R6w"/>
+                                                <constraint firstAttribute="bottom" secondItem="8cF-3S-ivS" secondAttribute="bottom" id="7Kk-2k-LcQ"/>
                                                 <constraint firstItem="53q-NU-r9q" firstAttribute="top" secondItem="ddZ-fA-Rra" secondAttribute="topMargin" constant="8" id="9q9-oW-onU"/>
                                                 <constraint firstItem="w5C-zl-0QT" firstAttribute="bottom" secondItem="nT8-ku-1Zh" secondAttribute="bottom" constant="10" id="AEL-go-M2Y"/>
                                                 <constraint firstItem="w5C-zl-0QT" firstAttribute="top" secondItem="53q-NU-r9q" secondAttribute="bottom" constant="4" id="CUi-5N-LBZ"/>
                                                 <constraint firstItem="nT8-ku-1Zh" firstAttribute="centerY" secondItem="ddZ-fA-Rra" secondAttribute="centerY" id="Dfb-N6-Szl"/>
+                                                <constraint firstAttribute="trailing" secondItem="8cF-3S-ivS" secondAttribute="trailing" id="H6d-W7-5Uw"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="w5C-zl-0QT" secondAttribute="trailing" constant="8" id="R3v-W4-OEN"/>
                                                 <constraint firstItem="nT8-ku-1Zh" firstAttribute="leading" secondItem="ddZ-fA-Rra" secondAttribute="leading" constant="8" id="VQ7-XJ-Phf"/>
+                                                <constraint firstItem="8cF-3S-ivS" firstAttribute="top" secondItem="ddZ-fA-Rra" secondAttribute="top" id="WBA-lV-oWc"/>
                                                 <constraint firstItem="53q-NU-r9q" firstAttribute="leading" secondItem="nT8-ku-1Zh" secondAttribute="trailing" constant="8" id="WWk-It-2iy"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="53q-NU-r9q" secondAttribute="trailing" constant="5" id="gBL-WT-d57"/>
                                                 <constraint firstItem="w5C-zl-0QT" firstAttribute="leading" secondItem="53q-NU-r9q" secondAttribute="leading" id="gth-52-MCe"/>
@@ -246,8 +253,8 @@
                         <constraints>
                             <constraint firstItem="bR2-FJ-vM2" firstAttribute="centerY" secondItem="ONc-aM-zxb" secondAttribute="centerY" id="FDH-2M-w8a"/>
                             <constraint firstItem="kqN-mq-kAm" firstAttribute="top" secondItem="vP7-yJ-E81" secondAttribute="top" id="Hmc-ih-ntD"/>
-                            <constraint firstItem="vP7-yJ-E81" firstAttribute="trailing" secondItem="kqN-mq-kAm" secondAttribute="trailing" id="OiP-ku-Rc5"/>
-                            <constraint firstItem="kqN-mq-kAm" firstAttribute="leading" secondItem="vP7-yJ-E81" secondAttribute="leading" id="Psz-ir-pud"/>
+                            <constraint firstItem="vP7-yJ-E81" firstAttribute="trailing" secondItem="kqN-mq-kAm" secondAttribute="trailing" constant="8" id="OiP-ku-Rc5"/>
+                            <constraint firstItem="kqN-mq-kAm" firstAttribute="leading" secondItem="vP7-yJ-E81" secondAttribute="leading" constant="8" id="Psz-ir-pud"/>
                             <constraint firstItem="vP7-yJ-E81" firstAttribute="bottom" secondItem="kqN-mq-kAm" secondAttribute="bottom" id="WkO-ud-Yth"/>
                             <constraint firstItem="bR2-FJ-vM2" firstAttribute="centerX" secondItem="ONc-aM-zxb" secondAttribute="centerX" id="vFD-8K-ekF"/>
                         </constraints>
@@ -286,11 +293,15 @@
         <image name="cloud.sun.fill" catalog="system" width="128" height="101"/>
         <image name="location.circle" catalog="system" width="128" height="123"/>
         <image name="magnifyingglass" catalog="system" width="128" height="117"/>
+        <image name="tableitem-bg" width="564" height="1001"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="tintColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

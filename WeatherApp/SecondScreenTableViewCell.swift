@@ -12,9 +12,12 @@ class SecondScreenTableViewCell: UITableViewCell {
     @IBOutlet weak var titleView: UILabel!
     @IBOutlet weak var weatherConditionImg: UIImageView!
     @IBOutlet weak var descView: UILabel!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+
+
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
